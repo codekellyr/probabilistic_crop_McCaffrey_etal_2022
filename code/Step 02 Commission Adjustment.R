@@ -8,7 +8,7 @@ library(rgdal)
 library(dplyr)
 library(progress)
 
-#set the county - Madera, Merced, Sacramento, San Joaquin, Stanislaus
+#set the county: Madera, Merced, Sacramento, San Joaquin, Stanislaus
 co<-"Stanislaus"
 
 #load the county shapefile
@@ -84,7 +84,7 @@ for(k in c(2013:2017)){
     writeRaster(r2, paste(wd2, fl, sep=""), format="GTiff", overwrite=T)
     #find the area of commission adjustment, save to the data frame
     areacomm<-r2
-    areacomm[areacomm>=0]<-900 #set all pixels to 900 m2
+    areacomm[areacomm>=0]<-900 #set all sqaures to 900 m2
     areacomm<-areacomm*r2 #adjust by new probability values
     areacommval<-cellStats(areacomm, sum, na.rm=T)
     #shove the value into our data frame
@@ -95,5 +95,5 @@ for(k in c(2013:2017)){
 }
 
 #save the area calculations
-# write.csv(area_df, paste0("./", co, "/", co,"_Crop_Area.csv"))
+write.csv(area_df, paste0("./", co, "/", co,"_Crop_Area.csv"))
 

@@ -1,6 +1,6 @@
 #A script to re-format the CDL data and assign CDL accuracy information
 
-# Last edited KR McCaffrey Nov 2021
+# Last edited KR McCaffrey Jan 2021
 
 #import the packages needed
 library(sp)
@@ -12,7 +12,7 @@ library(progress)
 #set the base working directory
 setwd("E:/Prob Crop Proj Final/")
 
-#set the county
+#set the county: Madera, Merced, Sacramento, San Joaquin, Stanislaus
 co<-"Stanislaus"
 
 #Import the county shapefile
@@ -20,7 +20,7 @@ wd<-paste0(getwd(), "/Spatial Data/CA_Counties/")
 county<-shapefile(paste0(wd, "CA_Counties_Tiger2016.shp"))
 county<-subset(county, county$NAME==co)
 
-#Import the CDL data for CA - CDL data which was clipped to CA
+#Import the CDL data for CA
 CDL_2013<-raster("./Spatial Data/CDL_CA/CDL_2013_06.tif")
 CDL_2014<-raster("./Spatial Data/CDL_CA/CDL_2014_06.tif")
 CDL_2015<-raster("./Spatial Data/CDL_CA/CDL_2015_06.tif")
@@ -49,7 +49,6 @@ for(k in 2013:2017){
   CDL<-crop(CDL, county)
   CDL<-mask(CDL, county)
   assign(paste0("CDL_",k),CDL)
-  gc()
 }
 
 #separate the CDL crops
@@ -80,13 +79,11 @@ for(k in 2013:2017){
 #Based on crop reclassification key
 
 #set up reclassification keys
-rastlist<-c(2, 3, 6, 10:14, 21, 23, 25, 27:36, 38, 39,
-            41:61, 66:69, 71, 72, 74:77, 204:224, 229,
-            242:250)
-old<-c(2, 3, 6, 10:14, 21, 23, 25, 27:36, 38, 39,
-       41:61, 66:69, 71, 72, 74:77, 204:224, 229,
-       242:250)
-new<-c(2, 3, 6:12, 14, 16:26, 28:81, 83:92)
+rastlist<-c(3, 6, 10:14, 23, 25, 27, 29:36, 38, 39, 41:61, 66:69, 71, 72, 74:77, 204, 206:208,
+            210:224, 229, 242:250) 
+old<-c(3, 6, 10:14, 23, 25, 27, 29:36, 38, 39, 41:61, 66:69, 71, 72, 74:77, 204, 206:208,
+       210:224, 229, 242:250)
+new<-c(3, 6:11, 14, 16, 17, 19:26, 28:61, 63:65, 67:81, 83:92)
 df<-as.data.frame(cbind(old, new))
 
 #First, reclassify the rasters that do not need to be recombined
@@ -120,14 +117,29 @@ for(k in 2013:2017){
   writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
 }
 
-#Sorghum: New=4, Old=4, 235, 236
+#Cotton: New=2, Old= 2, 232, 238, 239
+for(k in 2013:2017){
+  layer1<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_2_stack.tif"))
+  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_232_stack.tif"))
+  layer3<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_238_stack.tif"))
+  layer4<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_239_stack.tif"))
+  pres<-max(layer1[[1]], layer2[[1]], layer3[[1]], layer4[[1]], na.rm=T)
+  acc<-max(layer1[[2]], layer2[[2]], layer3[[2]], layer4[[2]], na.rm=T)
+  err<-max(layer1[[3]], layer2[[3]], layer3[[3]], layer4[[3]], na.rm=T)
+  rast<-stack(pres, acc, err)
+  fl<-paste0(co, "_", k, "_2_stack.tif")
+  writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
+}
+
+#Sorghum: New=4, Old=4, 234, 235, 236
 for(k in 2013:2017){
   layer1<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_4_stack.tif"))
-  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_235_stack.tif"))
-  layer3<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_236_stack.tif"))
-  pres<-max(layer1[[1]], layer2[[1]], layer3[[1]], na.rm=T)
-  acc<-max(layer1[[2]], layer2[[2]], layer3[[2]], na.rm=T)
-  err<-max(layer1[[3]], layer2[[3]], layer3[[3]], na.rm=T)
+  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_234_stack.tif"))
+  layer3<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_235_stack.tif"))
+  layer4<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_236_stack.tif"))
+  pres<-max(layer1[[1]], layer2[[1]], layer3[[1]], layer4[[1]], na.rm=T)
+  acc<-max(layer1[[2]], layer2[[2]], layer3[[2]], layer4[[2]], na.rm=T)
+  err<-max(layer1[[3]], layer2[[3]], layer3[[3]], layer4[[3]], na.rm=T)
   rast<-stack(pres, acc, err)
   fl<-paste0(co, "_", k, "_4_stack.tif")
   writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
@@ -148,6 +160,20 @@ for(k in 2013:2017){
   writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
 }
 
+#Barley: New = 12, Old=21, 233, 235, 237, 254
+for(k in 2013:2017){
+  layer1<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_21_stack.tif"))
+  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_233_stack.tif"))
+  layer3<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_235_stack.tif"))
+  layer4<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_237_stack.tif"))
+  layer5<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_254_stack.tif"))
+  pres<-max(layer1[[1]], layer2[[1]], layer3[[1]], layer4[[1]], layer5[[1]], na.rm=T)
+  acc<-max(layer1[[2]], layer2[[2]], layer3[[2]], layer4[[2]], layer5[[2]], na.rm=T)
+  err<-max(layer1[[3]], layer2[[3]], layer3[[3]], layer4[[3]], layer5[[3]], na.rm=T)
+  rast<-stack(pres, acc, err)
+  fl<-paste0(co,"_",k,"_12_stack.tif")
+  writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
+}
 
 #Durum Wheat: New=13, Old=22, 230, 234
 for(k in 2013:2017){
@@ -162,15 +188,31 @@ for(k in 2013:2017){
   writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
 }
 
-#Winter Wheat: New=15, Old=24, 238
+#Winter Wheat: New=15, Old=24, 26, 225, 236, 238
 for(k in 2013:2017){
   layer1<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_24_stack.tif"))
-  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_238_stack.tif"))
-  pres<-max(layer1[[1]], layer2[[1]], na.rm=T)
-  acc<-max(layer1[[2]], layer2[[2]], na.rm=T)
-  err<-max(layer1[[3]], layer2[[3]], na.rm=T)
+  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_26_stack.tif"))
+  layer3<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_225_stack.tif"))
+  layer4<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_236_stack.tif"))
+  layer5<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_238_stack.tif"))
+  pres<-max(layer1[[1]], layer2[[1]], layer3[[1]], layer4[[1]], layer5[[1]], na.rm=T)
+  acc<-max(layer1[[2]], layer2[[2]], layer3[[2]], layer4[[2]], layer5[[2]], na.rm=T)
+  err<-max(layer1[[3]], layer2[[3]], layer3[[3]], layer4[[3]], layer5[[3]], na.rm=T)
   rast<-stack(pres, acc, err)
   fl<-paste0(co,"_",k,"_15_stack.tif")
+  writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
+}
+
+#Oats: New = 18, Old=28, 226, 240
+for(k in 2013:2017){
+  layer1<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_28_stack.tif"))
+  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_226_stack.tif"))
+  layer3<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_240_stack.tif"))
+  pres<-max(layer1[[1]], layer2[[1]], layer3[[1]], na.rm=T)
+  acc<-max(layer1[[2]], layer2[[2]], layer3[[2]], na.rm=T)
+  err<-max(layer1[[3]], layer2[[3]], layer3[[3]], na.rm=T)
+  rast<-stack(pres, acc, err)
+  fl<-paste0(co,"_",k,"_18_stack.tif")
   writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
 }
 
@@ -187,15 +229,40 @@ for(k in 2013:2017){
   writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
 }
 
-#Lettuce: New = 82, Old = 227, 231, 232, 233
+#Triticale: New = 62, Old=205, 228
+for(k in 2013:2017){
+  layer1<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_205_stack.tif"))
+  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_228_stack.tif"))
+  pres<-max(layer1[[1]], layer2[[1]], na.rm=T)
+  acc<-max(layer1[[2]], layer2[[2]], na.rm=T)
+  err<-max(layer1[[3]], layer2[[3]], na.rm=T)
+  rast<-stack(pres, acc, err)
+  fl<-paste0(co,"_",k,"_62_stack.tif")
+  writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
+}
+
+#Cantaloupes: New = 66, Old= 209, 231
+for(k in 2013:2017){
+  layer1<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_209_stack.tif"))
+  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_231_stack.tif"))
+  pres<-max(layer1[[1]], layer2[[1]], na.rm=T)
+  acc<-max(layer1[[2]], layer2[[2]], na.rm=T)
+  err<-max(layer1[[3]], layer2[[3]], na.rm=T)
+  rast<-stack(pres, acc, err)
+  fl<-paste0(co,"_",k,"_66_stack.tif")
+  writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)
+}
+
+#Lettuce: New = 82, Old = 227, 230, 231, 232, 233
 for(k in 2013:2017){
   layer1<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_227_stack.tif"))
-  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_231_stack.tif"))
-  layer3<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_232_stack.tif"))
-  layer4<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_233_stack.tif"))
-  pres<-max(layer1[[1]], layer2[[1]], layer3[[1]], layer4[[1]], na.rm=T)
-  acc<-max(layer1[[2]], layer2[[2]], layer3[[2]], layer4[[2]], na.rm=T)
-  err<-max(layer1[[3]], layer2[[3]], layer3[[3]], layer4[[3]], na.rm=T)
+  layer2<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_230_stack.tif"))
+  layer3<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_231_stack.tif"))
+  layer4<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_232_stack.tif"))
+  layer5<-stack(paste0("./", co, "/CDL_Acc/", co, "_", k, "_233_stack.tif"))
+  pres<-max(layer1[[1]], layer2[[1]], layer3[[1]], layer4[[1]], layer5[[1]], na.rm=T)
+  acc<-max(layer1[[2]], layer2[[2]], layer3[[2]], layer4[[2]], layer5[[2]], na.rm=T)
+  err<-max(layer1[[3]], layer2[[3]], layer3[[3]], layer4[[3]], layer5[[3]], na.rm=T)
   rast<-stack(pres, acc, err)
   fl<-paste0(co,"_",k,"_82_stack.tif")
   writeRaster(rast, paste(wd, fl, sep="/"), format="GTiff", overwrite=T)

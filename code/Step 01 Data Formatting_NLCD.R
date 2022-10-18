@@ -15,7 +15,7 @@ library(progress)
 #set the base working directory
 setwd("E:/Prob Crop Proj Final/")
 
-#set the county
+#set the county: Madera, Merced, Sacramento, San Joaquin, Stanislaus
 co<-"Stanislaus"
 
 #load in CDL raster as a template
@@ -36,7 +36,7 @@ county<-spTransform(county, x)
 CA<-spTransform(CA, x)
 
 #Load the NLCD
-# NLCD data should be obtained from source - large file
+# nationwide NLCD data should be obtained from website
 NLCD<-raster("E:/Prob Crop Proj Final/NLCD_Land_Cover_L48_20190424_full_zip/NLCD_2013_Land_Cover_L48_20190424.img")
 
 #make smaller before reprojecting
@@ -162,7 +162,7 @@ NLCD_past_acc<-stack(NLCD_past, NLCD_notpast)
 writeRaster(NLCD_crop_acc, paste0("./",co,"/NLCD_crop_acc_stack_", co,".tif"), format="GTiff", overwrite=T)
 writeRaster(NLCD_past_acc, paste0("./",co,"/NLCD_past_acc_stack_", co, ".tif"), format="GTiff", overwrite=T)
 
-###Finad the area of 81 and 82 by county
+###Find the area of 81 and 82 by county
 co<-"Madera"
 
 NLCD81<-raster(paste0("./", co, "/NLCD_81_", co, ".tif"))

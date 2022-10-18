@@ -14,7 +14,7 @@
 ##Omission adjustment code:
 #1 = within confidence interval, no ommission adjustment needed
 #2 = CoA was not NA, commission-adjusted area was not within 90% CI, the state adjustment ratio was not >1. Multiply the probability values by the state adjustment ratio
-#3 = CoA was not NA, commission-adjusted area was not within 90% CI, the state adjustment ratio was >1. Create omission-adjustment raster from NLCD
+#3 = CoA was not NA, commission-adjusted area was not within 90% CI, the state adjustment ratio was >1. Create omisison-adjustment raster from NLCD
 #4 = Original CDL values were 0, no omission adjustment.
 #5 = CDL is >0, commission-adjusted area is 0. No omission adjustment
 #6 = The commission-adjusted area is >0, but the CoA is NA. No omission adjustment.
@@ -68,10 +68,10 @@ wd3<-paste0("./",co,"/CDL_Comb/")
 for(k in c(2013:2017)){ #for each of 5 years
   for(i in c(1:92)){ #each crop category
     comm<-raster(paste0(wd, co,"_Comm_",k,"_",i,".tif"))
-    Comm_Acres<-Om_Key$Comm_Acres[Om_Key$Year==k & Om_Key$Crop==i] #get the commission adjusted CDL acreage
+    Comm_Acres<-Om_Key$Comm_Acres[Om_Key$Year==k & Om_Key$Crop==i] #get the comission adjusted CDL acreage
     Census_Acres<-Om_Key$CoA_Acres[Om_Key$Year==k & Om_Key$Crop==i] #get the Ag census acreage
     key<-Om_Key$Adjustment_Code[Om_Key$Year==k &Om_Key$Crop==i] #get the key for the correct year and crop
-    if(key==1 | key==4 | key==5 | key==6){ #if the adjustment code is 1, 4, 5, or 6, save the commission probability raster as the final probability raster
+    if(key==1 | key==4 | key==5 | key==6){ #if the adjustment code is 1, 4, 5, or 6, save the comission probability raster as the final probability raster
       writeRaster(comm, paste0(wd2, co, "_",k,"_", i, "_prob.tif"), format="GTiff", overwrite=T)
     }else if(key==2){
       ratio<-Om_Key$State_Adj_Ratio[Om_Key$Year==k & Om_Key$Crop==i]
