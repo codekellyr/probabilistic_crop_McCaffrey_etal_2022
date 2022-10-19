@@ -1,0 +1,15 @@
+Use Data Layer,Acreage,Notes
+Corn,24370,
+Cotton,2091,
+Rice,-1,"Equal to -1, set to -1: no expansion"
+Soybeans,0,
+Wheat,3609,
+Vineyards,73432,
+Citrus,4849,
+Alfalfa/AgGrass,-1,
+Pasture/Rangeland,38419,
+Other Grains,1604,
+Other Orchards,140157,
+Vegetables/Ground Fruit,4948,
+Other Row Crops,0,
+Other Crops,"7,620",
