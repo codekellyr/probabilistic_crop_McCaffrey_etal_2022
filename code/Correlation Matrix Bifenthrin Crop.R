@@ -1,4 +1,4 @@
-# Correlation matrix of crop probability values to determine if crop occurence is correlated
+# Correlation matrix of crop probability values to determine if crop occurrence is correlated
 #edited Dec 15 2021 KM
 
 #import the packages needed
@@ -9,11 +9,6 @@ library(RcmdrMisc)
 library(colorRamps)
 library(RColorBrewer)
 library(corrplot)
-
-
-
-# library(dplyr)
-# library(progress)
 # library(Hmisc)
 
 

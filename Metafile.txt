@@ -1,27 +1,33 @@
 McCaffrey, KR, Paulukonis, EA, Raimondo, S, Sinnathamby, S, Purucker, ST, and Oliver, LM. 2022. A multi-scale approach for identification of potential pesticide 
 use sites impacting vernal pool critical habitat in California. Science of The Total Environment, 857(1): 159274. https://doi.org/10.1016/j.scitotenv.2022.159274.
 
-Code used for probabilistic and deterministic crop-layer development can be found here: https://github.com/codekellyr/probabilistic_crop_McCaffrey_etal_2022
+Code used for probabilistic and deterministic crop-layer development, and some data files, can be found here: https://github.com/codekellyr/probabilistic_crop_McCaffrey_etal_2022
 
 Input data layers are not all included in the directory, due to file size and the public data accessibility.
 
-Required raw data files are listed below. Intermediary files may be produced using the R code. Important resulting files are listed.
+Required data files are listed below. Intermediary files may be produced using the R code. Final raster file products are listed.
 
 Functions of Code:
-"Step 01 Data Formatting_CDL.R": Reproject the CDL layer for analysis and create accuracy rasters for each crop, per county, based on CDL accuracy metadata (CDL_Acc.csv & CDL_Err.csv)
-	Reclassifies crops based on the reclassification key in Appendix A.
-"Step 01 Data Formatting_NLCD.R": Clip and reproject the NLCD layer for analysis. Create layers of just cultivated crop or pasture/hay pixels for each county. Create conditional probability rasters
-	based on the matrices in Appendix A. 
-"Step 02 Commission Adjustment.R": Runs per county. Performs the commission adjustment step of the probabilitic use layer procedure. Produces commission-adjusted crop rasters and crop area values which can be compared to CoA value (see [COUNTY]_Crop_Area_Comparison.csv)
-"Step 03 Omission Adjustment.R": Runs per county. Performs the omission adjustment step of the probabilistic use layer procedure. Produce omission-adjuste crop rasters, then combines five years to produce final crop probability rasters, per county.
-"Step 04 Fourteen Deterministic Layers_[COUNTY].R": Builds Use Data Layers (UDLs) per county.
-"Step 05 Bifenthrin Layers_[COUNTY].R": Creates the bifenthrin probabilistic and deterministic use layers per county by combining the relevant probabilistic crop layers or UDLs
-"Step 06 Final Layer Creation.R": Produes the final probabailistic bifenthrin potential use layers and deterministic bifenthrin potential use layers, as well as a layer of the overlap between the two.
-	Also produces layers of the cultivated land within the study area by year.
-"Final Crop Prob Layers for Field Method.R": Produces the final individual crop probability layers for the studay area (/Final Crops/ directory) for use in the field-level analysis.
-"Correlation Matrix Bifenthrin Crop.R": For correlation testing between crops, see Appendix B. The published version was created using the sample of points in cor_test_sample.csv.
 
-Raw Data Required:
+"Step 01 Data Formatting_CDL.R": Reproject the CDL layer for analysis and create accuracy rasters for each crop, per county, based on CDL accuracy metadata. Metadata were obtained from https://nassgeodata.gmu.edu/CropScape/ for the state of CA and saved as "CDL_Acc.csv" and "CDL_Err.csv". Crops are reclassified based on the reclassification key in Appendix A Table A3.
+	
+"Step 01 Data Formatting_NLCD.R": Clip and reproject the NLCD layer for analysis. Create layers of cultivated crop or pasture/hay pixels for each county. Create NLCD conditional probability rasters for each county based on the matrices in Appendix A Tables A6 - A9. Calculates NLCD Cultivated Crops & Pasture/Hay Acreage for Table 1.
+
+"Step 02 Commission Adjustment.R": Performs the commission adjustment step of the probabilitic use layer procedure, by county. Produces commission-adjusted crop rasters and crop area values which can be compared to CoA value (see [COUNTY]_Crop_Area_Comparison.csv).
+
+"Step 03 Omission Adjustment.R": Performs the omission adjustment step of the probabilistic use layer procedure, by county. Produces omission-adjusted crop rasters, then combines the five years of data to produce final crop probability rasters, per county.
+
+"Step 04 Fourteen Deterministic Layers_[COUNTY].R": Builds the deterministic Use Data Layers (UDLs), by county. Also produces annual cultivated land rasters based on the produced UDLs. Calcuates the area of each UDL layer per county for Table 2.
+
+"Step 05 Bifenthrin Layers_[COUNTY].R": Creates the bifenthrin probabilistic and deterministic use layers, per county, by combining the relevant probabilistic crop layers or UDLs. Calculates county-level area values for Table 3.
+
+"Step 06 Final Layer Creation.R": Produes the final probabailistic bifenthrin potential use layers and deterministic bifenthrin potential use layers. Also produces layers of the cultivated land within the full study area by year, using the county cultivated land rasters produced in Step 04. Calculates the annual area of cultivated land in the CDL in Table 1. Calculates area values for the final probabilistic bifenthrin use area raster ("Bifenthrin_Probability_StudyArea_w_2012.tif") and the final deterministic bifenthrin use area raster ("Bifenthrin_UDL_StudyArea_2012.tif") reported in the manuscript. These rasters were re-projected to a lat-lon coordinate reference systems ("Bifenthrin_Probability_StudyArea_w_latlon_2012.tif" and "Bifenthrin_UDL_StudyArea_latlon_2012.tif") and were used for figure creation (Figure 2). 
+
+"Final Crop Prob Layers for Field Method.R": Produces the final individual crop probability layers for the studay area for use in the field-level analysis. The resulting files follow the naming convention, "[CROPTYPE]_StudyArea.tif".
+
+"Correlation Matrix Bifenthrin Crop.R": For correlation testing to determine if the occurence of different crops are related. Produces the results and figure in Appendix B Text B2 and Figure B2. The figure was created using the sample of random points in "cor_test_sample.csv".
+
+Data Required:
 CA_Border: May be obtained from https://www2.census.gov/geo/tiger/GENZ2016/shp/cb_2016_us_state_5m.zip.
 CA_Counties: May be obtained from https://data.ca.gov/dataset/ca-geographic-boundaries.
 CDL: Named CDL_[YEAR]_06.tif at first use (Step 01). May be obtained from https://nassgeodata.gmu.edu/CropScape/ for the state of CA.
@@ -32,8 +38,7 @@ NLCD 2011: Nationwide NLCD may be obtained from https://www.mrlc.gov/data. The d
 	Has codes indicating the required omission adjusted from Step 03. 
 cor_test_sample.csv: the random sample required for use in "Correlation Matrix Bifenthrin Crop.R" to reproduce the correlation matrix figure and results in Appendix B.
 
-Resulting Files:
+Final Resulting Files:
 Bifenthrin_Probability_StudyArea_w_2012.tif & Bifenthrin_Probability_StudyArea_w_latlon_2012.tif: The final probabilistic bifenthrin potential use layer covering the five-county study area
 Bifenthrin_UDL_StudyArea_2012.tif & Bifenthrin_UDL_StudyArea_latlon_2012.tif: The final deterministic bifenthrin potential use layer covering the five-county study area.
-Bifen_Overlap_2012.tif & Bifen_Overlap_2012_latlon.tif: The area of overlap between the deterministic and probabilistic use layers.
-/Final Crops/[CROPNAME]_StudyArea.tif: A directory of files is produced by "Final Crop Prob Layers for Field Method.R" of the final probabilistic layers for individual bifenthrin crops, which is used in the field-level analysis.
+[CROPNAME]_StudyArea.tif: Files produced by "Final Crop Prob Layers for Field Method.R" of the final probabilistic layers for individual bifenthrin crops, which is used in the field-level analysis.

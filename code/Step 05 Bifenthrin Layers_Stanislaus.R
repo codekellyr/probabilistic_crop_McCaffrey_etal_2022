@@ -69,6 +69,8 @@ plot(Bifen_Prob2)
 # writeRaster(Bifen_Prob2, paste0("./",co,"/", co, "_Bifen_Prob_2012_latlon_w.tif"), format="GTiff", overwrite=T)
 
 #find the area
+# area values from here down used for Table 3
+
 Bifen_Prob<-raster(paste0("./",co,"/",co,"_Bifen_Prob_2012_w.tif"))
 area_pix<-Bifen_Prob
 area_pix[area_pix>0]<-900 #set all cells equal to 900 m2
@@ -123,39 +125,39 @@ UDL_Area_Acres #372094.5
 #A total of 14947.02943 lbs of Bifenthrin were applied 
 UDL_App_Rate<-14947.02943/UDL_Area_Acres
 UDL_App_Rate #0.04016999 lbs/acre
-
-#### Examine the Overlap ####
-
-Bifen_Prob[Bifen_Prob==0]<-NA
-Bifen_Prob[Bifen_Prob>0]<-1
-plot(Bifen_Prob)
-
-Bifen_UDL[Bifen_UDL==0]<-NA
-Bifen_UDL[Bifen_UDL>0]<-1
-plot(Bifen_UDL)
-
-Overlap<-mask(Bifen_UDL, Bifen_Prob, maskvalue=1)
-plot(Overlap)
-
-Overlap[is.na(Overlap[])]<-0
-Overlap<-mask(Overlap, county)
-Overlap2<-projectRaster(Overlap, crs=x2, method="ngb")
-
-plot(Overlap)
-plot(Overlap2)
-
-writeRaster(Overlap, paste0("./", co, "/Bifen_Overlap_2012_", co, "_w.tif"), format="GTiff", overwrite=T)
-writeRaster(Overlap2, paste0("./", co, "/Bifen_Overlap_2012_", co, "_latlon_w.tif"), format="GTiff", overwrite=T)
-
-# what is the added footprint area?
-area_pix<-Overlap
-area_pix[area_pix>0]<-900
-Total_Area_Over<-cellStats(area_pix, sum, na.rm=T)
-Total_Area_Over #
-Total_Area_Over_Acres<-Total_Area_Over*0.000247105
-Total_Area_Over_Acres #2699.647
-
-#How much of the UDL is the OVerlap
-Total_Area_Over_Acres/UDL_Area_Acres #0.007255273 - 0.73%
-Bifen_Area_Acres/UDL_Area_Acres # 0.5557549 - 55.58%
-Total_Area_Acres/UDL_Area_Acres #0.9927447 - 99.27%
+# 
+# #### Examine the Overlap ####
+# 
+# Bifen_Prob[Bifen_Prob==0]<-NA
+# Bifen_Prob[Bifen_Prob>0]<-1
+# plot(Bifen_Prob)
+# 
+# Bifen_UDL[Bifen_UDL==0]<-NA
+# Bifen_UDL[Bifen_UDL>0]<-1
+# plot(Bifen_UDL)
+# 
+# Overlap<-mask(Bifen_UDL, Bifen_Prob, maskvalue=1)
+# plot(Overlap)
+# 
+# Overlap[is.na(Overlap[])]<-0
+# Overlap<-mask(Overlap, county)
+# Overlap2<-projectRaster(Overlap, crs=x2, method="ngb")
+# 
+# plot(Overlap)
+# plot(Overlap2)
+# 
+# writeRaster(Overlap, paste0("./", co, "/Bifen_Overlap_2012_", co, "_w.tif"), format="GTiff", overwrite=T)
+# writeRaster(Overlap2, paste0("./", co, "/Bifen_Overlap_2012_", co, "_latlon_w.tif"), format="GTiff", overwrite=T)
+# 
+# # what is the added footprint area?
+# area_pix<-Overlap
+# area_pix[area_pix>0]<-900
+# Total_Area_Over<-cellStats(area_pix, sum, na.rm=T)
+# Total_Area_Over #
+# Total_Area_Over_Acres<-Total_Area_Over*0.000247105
+# Total_Area_Over_Acres #2699.647
+# 
+# #How much of the UDL is the OVerlap
+# Total_Area_Over_Acres/UDL_Area_Acres #0.007255273 - 0.73%
+# Bifen_Area_Acres/UDL_Area_Acres # 0.5557549 - 55.58%
+# Total_Area_Acres/UDL_Area_Acres #0.9927447 - 99.27%

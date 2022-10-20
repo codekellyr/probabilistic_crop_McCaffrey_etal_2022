@@ -27,7 +27,6 @@ setwd("E:/Prob Crop Proj Final/")
 #Wheat, Alfalfa/Agricultural Grasses, Pasture/Rangeland, Other Crops, Other Orchards, Vineyards, and Citrus
 #14
 
-#Used Lennartz 2015 as a key to help categorize CDL
 #The CDL has already been split for the county
 
 #using 92 unique crop categories
@@ -625,6 +624,7 @@ area * 0.000247105 #84766.11
 writeRaster(Other, paste0(wd4,"OtherCrops_UDL_",co,"_Final.tif"), format="GTiff", overwrite=T)
 
 #### Acreage of UDL layers ####
+# For Table 2
 wd4<-paste0("./",co, "/Final_UDLs/")
 citrus<-raster(paste0(wd4, "Citrus_UDL_", co, "_Final.tif"))
 corn<-raster(paste0(wd4, "Corn_UDL_", co, "_Final.tif"))
