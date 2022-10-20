@@ -13,19 +13,19 @@ Functions of Code:
 	
 "Step 01 Data Formatting_NLCD.R": Clip and reproject the NLCD layer for analysis. Create layers of cultivated crop or pasture/hay pixels for each county. Create NLCD conditional probability rasters for each county based on the matrices in Appendix A Tables A6 - A9. Calculates NLCD Cultivated Crops & Pasture/Hay Acreage for Table 1.
 
-"Step 02 Commission Adjustment.R": Performs the commission adjustment step of the probabilitic use layer procedure, by county. Produces commission-adjusted crop rasters and crop area values which can be compared to CoA value (see [COUNTY]_Crop_Area_Comparison.csv).
+"Step 02 Commission Adjustment.R": Performs the commission adjustment step of the probabilistic use layer procedure, by county. Produces commission-adjusted crop rasters and crop area values which can be compared to CoA value (see [COUNTY]_Crop_Area_Comparison.csv).
 
 "Step 03 Omission Adjustment.R": Performs the omission adjustment step of the probabilistic use layer procedure, by county. Produces omission-adjusted crop rasters, then combines the five years of data to produce final crop probability rasters, per county.
 
-"Step 04 Fourteen Deterministic Layers_[COUNTY].R": Builds the deterministic Use Data Layers (UDLs), by county. Also produces annual cultivated land rasters based on the produced UDLs. Calcuates the area of each UDL layer per county for Table 2.
+"Step 04 Fourteen Deterministic Layers_[COUNTY].R": Builds the deterministic Use Data Layers (UDLs), by county. Also produces annual cultivated land rasters based on the produced UDLs. Calculates the area of each UDL layer per county for Table 2.
 
 "Step 05 Bifenthrin Layers_[COUNTY].R": Creates the bifenthrin probabilistic and deterministic use layers, per county, by combining the relevant probabilistic crop layers or UDLs. Calculates county-level area values for Table 3.
 
-"Step 06 Final Layer Creation.R": Produes the final probabailistic bifenthrin potential use layers and deterministic bifenthrin potential use layers. Also produces layers of the cultivated land within the full study area by year, using the county cultivated land rasters produced in Step 04. Calculates the annual area of cultivated land in the CDL in Table 1. Calculates area values for the final probabilistic bifenthrin use area raster ("Bifenthrin_Probability_StudyArea_w_2012.tif") and the final deterministic bifenthrin use area raster ("Bifenthrin_UDL_StudyArea_2012.tif") reported in the manuscript. These rasters were re-projected to a lat-lon coordinate reference systems ("Bifenthrin_Probability_StudyArea_w_latlon_2012.tif" and "Bifenthrin_UDL_StudyArea_latlon_2012.tif") and were used for figure creation (Figure 2). 
+"Step 06 Final Layer Creation.R": Produces the final probabilistic bifenthrin potential use layers and deterministic bifenthrin potential use layers. Also produces layers of the cultivated land within the full study area by year, using the county cultivated land rasters produced in Step 04. Calculates the annual area of cultivated land in the CDL in Table 1. Calculates area values for the final probabilistic bifenthrin use area raster ("Bifenthrin_Probability_StudyArea_w_2012.tif") and the final deterministic bifenthrin use area raster ("Bifenthrin_UDL_StudyArea_2012.tif") reported in the manuscript. These rasters were re-projected to a lat-lon coordinate reference systems ("Bifenthrin_Probability_StudyArea_w_latlon_2012.tif" and "Bifenthrin_UDL_StudyArea_latlon_2012.tif") and were used for figure creation (Figure 2). 
 
-"Final Crop Prob Layers for Field Method.R": Produces the final individual crop probability layers for the studay area for use in the field-level analysis. The resulting files follow the naming convention, "[CROPTYPE]_StudyArea.tif".
+"Final Crop Prob Layers for Field Method.R": Produces the final individual crop probability layers for the study area for use in the field-level analysis. The resulting files follow the naming convention, "[CROPTYPE]_StudyArea.tif".
 
-"Correlation Matrix Bifenthrin Crop.R": For correlation testing to determine if the occurence of different crops are related. Produces the results and figure in Appendix B Text B2 and Figure B2. The figure was created using the sample of random points in "cor_test_sample.csv".
+"Correlation Matrix Bifenthrin Crop.R": For correlation testing to determine if the occurrence of different crops are related. Produces the results and figure in Appendix B Text B2 and Figure B2. The figure was created using the sample of random points in "cor_test_sample.csv".
 
 Data Required:
 CA_Border: May be obtained from https://www2.census.gov/geo/tiger/GENZ2016/shp/cb_2016_us_state_5m.zip.
